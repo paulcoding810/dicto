@@ -1,0 +1,34 @@
+name: Build
+
+on:
+  pull_request:
+    branches:
+      - '*'
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Create artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '21'
+      - name: install dependency
+        run: yarn
+      - name: Create chrome artifacts
+        run: yarn zip
+      - name: Create Firefox artifacts
+        run: yarn zip:firefox
+      - uses: actions/upload-artifact@v4
+        with:
+          name: extensions
+          path: |
+            package/*
