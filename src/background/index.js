@@ -31,7 +31,7 @@ async function translateSelection(request) {
   }
 
   const response = await fetch(
-    `https://translate.google.com/translate_a/single?q=${request.text}&sl=auto&tl=vi&hl=en&client=it&otf=2&dj=1&ie=UTF-8&oe=UTF-8&dt=t&dt=rmt&dt=bd&dt=rms&dt=qca&dt=ss&dt=md&dt=ld&dt=ex&dt=rw`,
+    `https://translate.google.com/translate_a/single?q=${encodeURIComponent(request.text)}&sl=auto&tl=vi&hl=en&client=it&otf=2&dj=1&ie=UTF-8&oe=UTF-8&dt=t&dt=rmt&dt=bd&dt=rms&dt=qca&dt=ss&dt=md&dt=ld&dt=ex&dt=rw`,
     {
       credentials: 'include',
       headers: {
