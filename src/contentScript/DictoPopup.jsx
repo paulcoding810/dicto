@@ -11,7 +11,7 @@ export default function DictoPopup({
   synonyms,
 }) {
   const expandable = Boolean(definition || synonyms?.length > 0 || examples?.length > 0)
-  const [expanded, setExpanded] = React.useState(expandable)
+  const [expanded, setExpanded] = React.useState(false)
 
   return (
     <div
@@ -35,7 +35,7 @@ export default function DictoPopup({
         </div>
       )}
 
-      {!expanded ? (
+      {!expanded && expandable ? (
         <button
           className="text-blue-500 hover:underline"
           onClick={(e) => {
