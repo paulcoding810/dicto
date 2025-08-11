@@ -8,9 +8,38 @@ export default function DictoPopup({
   examples,
   definition,
   synonyms,
+  src = 'en-US',
 }) {
   const expandable = Boolean(definition || synonyms?.length > 0 || examples?.length > 0)
   const [expanded, setExpanded] = React.useState(false)
+
+  const tts = () => {
+    if (!orig || !speechSynthesis) return
+    const utterance = new SpeechSynthesisUtterance(orig)
+    utterance.lang = src
+    speechSynthesis.speak(utterance)
+  }
+
+  const tts2 = () => {
+    chrome.runtime.sendMessage(
+      {
+        type: 'tts',
+        text: orig,
+        src: src,
+      },
+      (response) => {
+        if (response && response.success) {
+          console.log('TTS request sent successfully:', response.result)
+          const audio = new Audio(response.result)
+          audio.play().catch((error) => {
+            console.error('Error playing audio:', error)
+          })
+        } else {
+          console.error('Failed to send TTS request:', response)
+        }
+      },
+    )
+  }
 
   return (
     <div
@@ -27,17 +56,63 @@ export default function DictoPopup({
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
       }}
     >
-      <h2 style={{ marginBottom: '0.5rem', fontSize: '1.125rem', fontWeight: 'bold' }}>{orig}</h2>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          paddingBottom: '0.5rem',
+          borderBottom: '1px solid #e5e7eb',
+        }}
+      >
+        <div>
+          <div
+            style={{
+              fontSize: '1.125rem',
+              fontWeight: 'bold',
+              borderBottom: 'none',
+            }}
+          >
+            {orig}
+          </div>
+          {translit && <div style={{ color: '#6b7280' }}>[{translit}]</div>}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <button
+            onClick={tts}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: '#3b82f6',
+              fontSize: '1.25rem',
+            }}
+            title="Browser Text-to-Speech"
+          >
+            🔉
+          </button>
+          <button
+            onClick={tts2}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: '#3b82f6',
+              fontSize: '1.25rem',
+            }}
+            title="Google Text-to-Speech"
+          >
+            🔊
+          </button>
+        </div>
+      </div>
       <p style={{ fontStyle: 'italic', color: '#4b5563' }}>{trans}</p>
-      {translit && <p style={{ color: '#6b7280' }}>[{translit}]</p>}
 
       {dict && dict.length > 0 && (
         <div style={{ marginBottom: '0.5rem' }}>
           {dict.map((entry, index) => (
             <div key={index} style={{ marginBottom: '0.25rem', borderBottom: '1px solid #e5e7eb' }}>
-              {entry.pos && (
-                <span style={{ marginLeft: '0.25rem', color: '#4b5563' }}>({entry.pos})</span>
-              )}
+              {entry.pos && <span style={{ color: '#4b5563' }}>({entry.pos})</span>}
               {entry.terms && entry.terms.length > 0 && (
                 <div style={{ color: '#6b7280' }}>{entry.terms.join(', ')}</div>
               )}

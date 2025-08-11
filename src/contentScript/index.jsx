@@ -61,7 +61,7 @@ function showTranslationResult(result, position) {
 }
 
 function parseResult(result) {
-  const { sentences, dict, synsets, definitions, examples: exampleList } = result
+  const { sentences, dict, synsets, definitions, examples: exampleList, src } = result
   const trans = sentences?.[0]?.trans
   const orig = sentences?.[0]?.orig
   const translit = sentences?.[1]?.src_translit
@@ -76,5 +76,6 @@ function parseResult(result) {
     examples,
     definition,
     synonyms,
+    src,
   }
 }
