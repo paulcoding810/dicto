@@ -43,7 +43,6 @@ export default function DictoPopup({
 
   return (
     <div
-      id="dicto-popup"
       style={{
         maxWidth: '20rem',
         padding: '0.5rem',
@@ -65,18 +64,7 @@ export default function DictoPopup({
           borderBottom: '1px solid #e5e7eb',
         }}
       >
-        <div>
-          <div
-            style={{
-              fontSize: '1.125rem',
-              fontWeight: 'bold',
-              borderBottom: 'none',
-            }}
-          >
-            {orig}
-          </div>
-          {translit && <div style={{ color: '#6b7280' }}>[{translit}]</div>}
-        </div>
+        {translit && <div style={{ color: '#6b7280' }}>[{translit}]</div>}
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <button
             onClick={tts}

@@ -5,7 +5,11 @@ import DictoPopup from './DictoPopup'
 document.addEventListener('keydown', (event) => {
   if (event.shiftKey) {
     const selection = window.getSelection()
-    const position = selection.getRangeAt(0).getBoundingClientRect()
+    const position =
+      selection.anchorNode.nodeType !== Node.TEXT_NODE
+        ? selection.anchorNode.getBoundingClientRect()
+        : selection.getRangeAt(0).getBoundingClientRect()
+
     const selectedText = selection.toString().trim()
 
     if (selectedText) {
@@ -31,14 +35,14 @@ document.addEventListener('keydown', (event) => {
 
 // add click event to hide all popups when clicking outside
 document.addEventListener('click', (event) => {
-  const popup = document.querySelector('#dicto-popup')
+  const popup = document.querySelector('.dicto-container')
   if (popup && !popup.contains(event.target)) {
     removeAllPopups()
   }
 })
 
 function removeAllPopups() {
-  const popups = document.querySelectorAll('#dicto-popup')
+  const popups = document.querySelectorAll('.dicto-container')
   popups.forEach((popup) => {
     popup.remove()
   })
@@ -48,10 +52,14 @@ function removeAllPopups() {
 function showTranslationResult(result, position) {
   // Create a container element
   const rootElement = document.createElement('div')
-  rootElement.id = 'dicto-container'
-  rootElement.style.position = 'absolute'
-  rootElement.style.left = `${position.x}px`
-  rootElement.style.top = `${position.y}px`
+  rootElement.className = 'dicto-container'
+  Object.assign(rootElement.style, {
+    maxWidth: '20rem',
+    top: `${position.top + position.height + window.scrollY}px`,
+    left: `${position.left + window.scrollX}px`,
+    zIndex: '9999',
+    position: 'absolute',
+  })
   document.body.appendChild(rootElement)
 
   // Render the React component
