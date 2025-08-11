@@ -35,7 +35,7 @@ async function translateSelection(request) {
     {
       credentials: 'include',
       headers: {
-        'User-Agent': 'Test',
+        'User-Agent': 'GoogleTranslate',
         Accept: '*/*',
         'Accept-Language': 'en-GB,en;q=0.5',
         'Alt-Used': 'translate.google.com',

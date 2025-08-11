@@ -35,5 +35,15 @@ export default defineManifest({
       matches: [],
     },
   ],
-  permissions: ['storage', 'activeTab', 'scripting', 'contextMenus'],
+  host_permissions: ['*://translate.google.com/*', '*://translate.googleapis.com/*'],
+  declarative_net_request: {
+    rule_resources: [
+      {
+        id: 'rule1',
+        enabled: true,
+        path: 'public/rules_1.json',
+      },
+    ],
+  },
+  permissions: ['storage', 'declarativeNetRequest'],
 })
