@@ -76,7 +76,7 @@ async function tts(text, src = 'en-US') {
   }
 
   const response = await fetch(
-    `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&sl=${src}&tl=en&client=it`,
+    `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&sl=${src}&tl=${src}&client=it`,
     requestOptions,
   )
 
