@@ -4,7 +4,7 @@ const maxLength = 5e3
 const requestOptions = {
   credentials: 'include',
   headers: {
-    'User-Agent': 'GoogleTranslate', // need to set a custom User-Agent to avoid being blocked
+    'User-Agent': 'GoogleTranslate/dicto', // need to set a custom User-Agent to avoid being blocked
     Accept: '*/*',
     'Accept-Language': 'en-GB,en;q=0.5',
     'Alt-Used': 'translate.google.com',

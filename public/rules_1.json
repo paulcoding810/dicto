@@ -8,7 +8,7 @@
         {
           "header": "user-agent",
           "operation": "set",
-          "value": "GoogleTranslate"
+          "value": "GoogleTranslate/dicto"
         }
       ]
     },
