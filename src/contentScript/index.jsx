@@ -1,5 +1,6 @@
 import { createRoot } from 'react-dom/client'
 import DictoPopup from './DictoPopup'
+import { parseResult } from '../utils/translate'
 
 // on press shift, send current selected text to background script
 document.addEventListener('keydown', (event) => {
@@ -66,24 +67,4 @@ function showTranslationResult(result, position) {
   const root = createRoot(rootElement)
   const translation = parseResult(result)
   root.render(<DictoPopup {...translation} />)
-}
-
-function parseResult(result) {
-  const { sentences, dict, synsets, definitions, examples: exampleList, src } = result
-  const trans = sentences?.[0]?.trans
-  const orig = sentences?.[0]?.orig
-  const translit = sentences?.[1]?.src_translit
-  const synonyms = synsets?.[0]?.entry?.[0]?.synonym
-  const definition = definitions?.[0]?.entry?.[0]?.gloss
-  const examples = exampleList?.example?.map((ex) => ex.text)
-  return {
-    trans,
-    dict,
-    orig,
-    translit,
-    examples,
-    definition,
-    synonyms,
-    src,
-  }
 }

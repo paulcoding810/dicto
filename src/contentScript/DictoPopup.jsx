@@ -9,6 +9,8 @@ export default function DictoPopup({
   definition,
   synonyms,
   src = 'en-US',
+  maxWidth = '20rem',
+  showOrig = false,
 }) {
   const expandable = Boolean(definition || synonyms?.length > 0 || examples?.length > 0)
   const [expanded, setExpanded] = React.useState(false)
@@ -44,7 +46,7 @@ export default function DictoPopup({
   return (
     <div
       style={{
-        maxWidth: '20rem',
+        maxWidth: maxWidth,
         padding: '0.5rem',
         overflow: 'auto',
         fontFamily: 'sans-serif',
@@ -55,6 +57,9 @@ export default function DictoPopup({
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
       }}
     >
+      {showOrig && orig && (
+        <h3 style={{ marginBottom: '0.5rem', color: '#4b5563', fontWeight: 'bold' }}>{orig}</h3>
+      )}
       <div
         style={{
           display: 'flex',
