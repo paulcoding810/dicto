@@ -18,7 +18,7 @@ const requestOptions = {
 }
 
 chrome.action.onClicked.addListener((tab) => {
-  chrome.tabs.create({ url: 'options.html' })
+  chrome.tabs.create({ url: chrome.runtime.getURL('options.html') })
 })
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
