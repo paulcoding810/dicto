@@ -6,6 +6,11 @@ import { parseResult } from '../utils/translate'
 document.addEventListener('keydown', (event) => {
   if (event.shiftKey) {
     const selection = window.getSelection()
+
+    if (selection.anchorNode.nodeName === 'INPUT' || selection.anchorNode.nodeName === 'TEXTAREA') {
+      console.warn('Selection is in an input or textarea, skipping translation.')
+      return
+    }
     const position =
       selection.anchorNode.nodeType !== Node.TEXT_NODE
         ? selection.anchorNode.getBoundingClientRect()
