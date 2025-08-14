@@ -63,8 +63,12 @@ function showTranslationResult(result, position) {
   })
   document.body.appendChild(rootElement)
 
-  // Render the React component
-  const root = createRoot(rootElement)
+  // Render the React component in Shadow DOM
+  const shadowRoot = rootElement.attachShadow({ mode: 'open' })
+  const shadowContainer = document.createElement('div')
+  shadowRoot.appendChild(shadowContainer)
+
+  const root = createRoot(shadowContainer)
   const translation = parseResult(result)
   root.render(<DictoPopup {...translation} />)
 }
