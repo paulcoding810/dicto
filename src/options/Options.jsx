@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import DictoPopup from '../contentScript/DictoPopup'
 import '../index.css'
+import SwipeableItem from './SwipeableItem'
 
 export const Options = () => {
   const [history, setHistory] = useState([])
@@ -22,13 +23,25 @@ export const Options = () => {
     }
   }, [])
 
+  const handleDeleteItem = (itemToDelete) => {
+    const updatedHistory = history.filter((item) => item.timestamp !== itemToDelete.timestamp)
+    setHistory(updatedHistory)
+
+    // Update storage
+    chrome.storage.local.set({ history: updatedHistory }, () => {
+      console.log('History item deleted')
+    })
+  }
+
   return (
     <main>
       <div className="flex flex-col gap-2 p-4">
         {history.length > 0 ? (
           <>
             {history.map((item, index) => (
-              <DictoPopup {...item.translation} showOrig maxWidth="none" key={item.timestamp} />
+              <SwipeableItem key={item.timestamp} item={item} onDelete={handleDeleteItem}>
+                <DictoPopup {...item.translation} showOrig maxWidth="none" />
+              </SwipeableItem>
             ))}
           </>
         ) : (
