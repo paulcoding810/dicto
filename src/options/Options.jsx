@@ -37,13 +37,13 @@ export const Options = () => {
     <main>
       <div className="flex flex-col gap-2 p-4">
         {history.length > 0 ? (
-          <>
+          <div className="grid grid-cols-3 gap-4">
             {history.map((item, index) => (
               <SwipeableItem key={item.timestamp} item={item} onDelete={handleDeleteItem}>
                 <DictoPopup {...item.translation} showOrig maxWidth="none" />
               </SwipeableItem>
             ))}
-          </>
+          </div>
         ) : (
           <p>No translation history available.</p>
         )}

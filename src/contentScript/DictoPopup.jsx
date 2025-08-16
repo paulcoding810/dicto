@@ -64,12 +64,12 @@ export default function DictoPopup({
         style={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
           paddingBottom: '0.5rem',
           borderBottom: '1px solid #e5e7eb',
         }}
       >
         {translit && <div style={{ color: '#6b7280' }}>[{translit}]</div>}
+        <div className="flex flex-1" />
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <button
             onClick={tts}
