@@ -26,7 +26,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case 'translate':
       translateSelection(request.text)
         .then((result) => {
-          saveHistory(request.text, parseResult(result))
+          if (request.shouldSave) {
+            saveHistory(request.text, parseResult(result))
+          }
           sendResponse({ success: true, result })
         })
         .catch((error) => {

@@ -23,6 +23,7 @@ document.addEventListener('keydown', (event) => {
         {
           type: 'translate',
           text: selectedText,
+          shouldSave: !event.ctrlKey && !event.metaKey && !event.altKey, // Save unless Ctrl/Cmd/Opt is pressed
         },
         (response) => {
           if (response && response.success) {
