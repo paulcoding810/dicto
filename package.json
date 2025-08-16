@@ -1,7 +1,7 @@
 {
   "name": "dicto",
   "displayName": "Dicto",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "author": "paulcoding",
   "description": "minimal dictionary extension",
   "type": "module",
@@ -11,7 +11,7 @@
     "firefox-extension",
     "react",
     "vite",
-    "create-chrome-ext"
+    "gen-ext"
   ],
   "engines": {
     "node": ">=14.18.0"
