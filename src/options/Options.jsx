@@ -10,7 +10,8 @@ export const Options = () => {
     function handleVisibilityChange() {
       if (document.visibilityState === 'visible') {
         chrome.storage.local.get(['history'], (result) => {
-          setHistory(result.history || [])
+          // get first 50 records
+          setHistory(result.history ? result.history.slice(0, 50) : [])
         })
       }
     }

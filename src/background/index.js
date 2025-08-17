@@ -116,11 +116,6 @@ function saveHistory(text, translation) {
     // Add the new item at the beginning
     history.unshift({ text, translation, timestamp: Date.now() })
 
-    // Limit history to the last 100 items
-    if (history.length > 100) {
-      history.length = 100
-    }
-
     chrome.storage.local.set({ history }, () => {
       console.log('History saved successfully:', history)
     })
