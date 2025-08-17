@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import DictoPopup from '../contentScript/DictoPopup'
 import '../index.css'
+import FlashCard from './FlashCard'
 import SwipeableItem from './SwipeableItem'
 
 export const Options = () => {
@@ -41,7 +42,9 @@ export const Options = () => {
           <div className="grid grid-cols-3 gap-4">
             {history.map((item, index) => (
               <SwipeableItem key={item.timestamp} item={item} onDelete={handleDeleteItem}>
-                <DictoPopup {...item.translation} showOrig maxWidth="none" />
+                <FlashCard title={item.text}>
+                  <DictoPopup {...item.translation} showOrig maxWidth="none" />
+                </FlashCard>
               </SwipeableItem>
             ))}
           </div>
