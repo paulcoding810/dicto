@@ -15,14 +15,20 @@ export default function DictoPopup({
   const expandable = Boolean(definition || synonyms?.length > 0 || examples?.length > 0)
   const [expanded, setExpanded] = React.useState(false)
 
-  const tts = () => {
+  const tts = (e) => {
+    e.stopPropagation()
+    e.preventDefault()
+
     if (!orig || !speechSynthesis) return
     const utterance = new SpeechSynthesisUtterance(orig)
     utterance.lang = src
     speechSynthesis.speak(utterance)
   }
 
-  const tts2 = () => {
+  const tts2 = (e) => {
+    e.stopPropagation()
+    e.preventDefault()
+
     chrome.runtime.sendMessage(
       {
         type: 'tts',
