@@ -16,7 +16,7 @@ document.addEventListener('keydown', (event) => {
         ? selection.anchorNode.getBoundingClientRect()
         : selection.getRangeAt(0).getBoundingClientRect()
 
-    const selectedText = selection.toString().trim()
+    const selectedText = selection.toString().trim().toLowerCase()
 
     if (selectedText) {
       chrome.runtime.sendMessage(

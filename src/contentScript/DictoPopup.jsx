@@ -6,13 +6,12 @@ export default function DictoPopup({
   dict,
   translit,
   examples,
-  definition,
-  synonyms,
+  definitions,
   src = 'en-US',
   maxWidth = '20rem',
   showOrig = false,
 }) {
-  const expandable = Boolean(definition || synonyms?.length > 0 || examples?.length > 0)
+  const expandable = Boolean(definitions?.length > 0 || examples?.length > 0)
   const [expanded, setExpanded] = React.useState(false)
 
   const tts = (e) => {
@@ -37,7 +36,6 @@ export default function DictoPopup({
       },
       (response) => {
         if (response && response.success) {
-          console.log('TTS request sent successfully:', response.result)
           const audio = new Audio(response.result)
           audio.play().catch((error) => {
             console.error('Error playing audio:', error)
@@ -105,12 +103,22 @@ export default function DictoPopup({
           </button>
         </div>
       </div>
-      <p style={{ fontStyle: 'italic', color: '#4b5563' }}>{trans}</p>
+      <p style={{ fontStyle: 'italic', color: '#4b5563', borderBottom: '1px solid #e5e7eb' }}>
+        {trans}
+      </p>
 
       {dict && dict.length > 0 && (
         <div style={{ marginBottom: '0.5rem' }}>
           {dict.map((entry, index) => (
-            <div key={index} style={{ marginBottom: '0.25rem', borderBottom: '1px solid #e5e7eb' }}>
+            <div
+              key={index}
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                marginBottom: '0.25rem',
+                borderBottom: '1px solid #e5e7eb',
+              }}
+            >
               {entry.pos && <span style={{ color: '#4b5563' }}>({entry.pos})</span>}
               {entry.terms && entry.terms.length > 0 && (
                 <div style={{ color: '#6b7280' }}>{entry.terms.join(', ')}</div>
@@ -139,18 +147,18 @@ export default function DictoPopup({
         </button>
       ) : (
         <>
-          {definition && (
+          {definitions && definitions.length > 0 && (
             <div style={{ marginTop: '0.5rem' }}>
-              <h3 style={{ fontWeight: '600' }}>Definition:</h3>
-              <p>{definition}</p>
-            </div>
-          )}
-          {synonyms && synonyms.length > 0 && (
-            <div style={{ marginTop: '0.5rem' }}>
-              <h3 style={{ fontWeight: '600' }}>Synonyms:</h3>
+              <h3 style={{ fontWeight: '600' }}>Definitions:</h3>
               <ul style={{ listStyleType: 'disc', paddingLeft: '1rem' }}>
-                {synonyms.map((synonym, index) => (
-                  <li key={index}>{synonym}</li>
+                {definitions.map((def, index) => (
+                  <li key={index}>
+                    <strong>{def.gloss}</strong>
+                    {def.example && <div style={{ fontStyle: 'italic' }}>👉🏻 {def.example}</div>}
+                    {def.synonyms && def.synonyms.length > 0 && (
+                      <div style={{ fontSize: '12px' }}>🎹 {def.synonyms.join(', ')}</div>
+                    )}
+                  </li>
                 ))}
               </ul>
             </div>

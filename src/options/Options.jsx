@@ -6,6 +6,7 @@ import SwipeableItem from './SwipeableItem'
 
 export const Options = () => {
   const [history, setHistory] = useState([])
+  console.log('🚀 ~ Options ~ history:', history)
 
   useEffect(() => {
     function handleVisibilityChange() {
