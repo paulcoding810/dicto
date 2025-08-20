@@ -44,7 +44,7 @@ export const Options = () => {
             {history.map((item, index) => (
               <SwipeableItem key={item.timestamp} item={item} onDelete={handleDeleteItem}>
                 <FlashCard title={item.text}>
-                  <DictoPopup {...item.translation} showOrig maxWidth="none" />
+                  <DictoPopup {...item.translation} showOrig expanded maxWidth="none" />
                 </FlashCard>
               </SwipeableItem>
             ))}

@@ -10,9 +10,10 @@ export default function DictoPopup({
   src = 'en-US',
   maxWidth = '22rem',
   showOrig = false,
+  expanded: initialExpanded = false,
 }) {
   const expandable = Boolean(definitions?.length > 0 || examples?.length > 0)
-  const [expanded, setExpanded] = React.useState(false)
+  const [expanded, setExpanded] = React.useState(initialExpanded)
 
   const tts = (e) => {
     e.stopPropagation()
