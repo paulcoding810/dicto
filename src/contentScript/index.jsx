@@ -10,7 +10,7 @@ document.addEventListener('keydown', (event) => {
     if (
       selection.anchorNode.nodeName === 'INPUT' ||
       selection.anchorNode.nodeName === 'TEXTAREA' ||
-      selection.anchorNode.parentElement.className.includes('editable')
+      selection.anchorNode.parentElement.closest('[contenteditable]') !== null
     ) {
       console.warn('Selection is in an input or textarea, skipping translation.')
       return
