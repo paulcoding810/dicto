@@ -7,7 +7,11 @@ document.addEventListener('keydown', (event) => {
   if (event.shiftKey) {
     const selection = window.getSelection()
 
-    if (selection.anchorNode.nodeName === 'INPUT' || selection.anchorNode.nodeName === 'TEXTAREA') {
+    if (
+      selection.anchorNode.nodeName === 'INPUT' ||
+      selection.anchorNode.nodeName === 'TEXTAREA' ||
+      selection.anchorNode.parentElement.className.includes('editable')
+    ) {
       console.warn('Selection is in an input or textarea, skipping translation.')
       return
     }
