@@ -12,8 +12,8 @@ export const Options = () => {
     function handleVisibilityChange() {
       if (document.visibilityState === 'visible') {
         chrome.storage.local.get(['history'], (result) => {
-          // get first 50 records
-          setHistory(result.history ? result.history.slice(0, 50) : [])
+          // get first 60 records
+          setHistory(result.history ? result.history.slice(0, 3 * 20) : [])
         })
       }
     }
