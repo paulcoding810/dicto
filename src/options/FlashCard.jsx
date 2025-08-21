@@ -4,7 +4,7 @@ export default function FlashCard({ title, children }) {
   const [clicked, setClicked] = useState(false)
 
   const handleClick = () => {
-    setClicked(!clicked)
+    setClicked(true)
   }
 
   return (
