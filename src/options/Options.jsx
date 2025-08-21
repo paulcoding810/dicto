@@ -3,10 +3,10 @@ import DictoPopup from '../contentScript/DictoPopup'
 import '../index.css'
 import FlashCard from './FlashCard'
 import SwipeableItem from './SwipeableItem'
+import '../contentScript'
 
 export const Options = () => {
   const [history, setHistory] = useState([])
-  console.log('🚀 ~ Options ~ history:', history)
 
   useEffect(() => {
     function handleVisibilityChange() {
