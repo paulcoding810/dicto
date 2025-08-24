@@ -60,8 +60,10 @@ async function translateSelection(text) {
     throw new Error(`Text exceeds maximum length of ${maxLength} characters.`)
   }
 
+  const target = (await chrome.storage.local.get(['targetLanguage']))?.targetLanguage || 'vi'
+
   const response = await fetch(
-    `https://translate.google.com/translate_a/single?q=${encodeURIComponent(text)}&sl=auto&tl=vi&hl=en&client=it&otf=2&dj=1&ie=UTF-8&oe=UTF-8&dt=t&dt=rmt&dt=bd&dt=rms&dt=qca&dt=ss&dt=md&dt=ld&dt=ex&dt=rw`,
+    `https://translate.google.com/translate_a/single?q=${encodeURIComponent(text)}&sl=auto&tl=${target}&hl=en&client=it&otf=2&dj=1&ie=UTF-8&oe=UTF-8&dt=t&dt=rmt&dt=bd&dt=rms&dt=qca&dt=ss&dt=md&dt=ld&dt=ex&dt=rw`,
     requestOptions,
   )
 

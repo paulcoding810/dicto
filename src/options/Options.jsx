@@ -1,20 +1,23 @@
 import { useEffect, useState } from 'react'
+import DownloadIcon from '../assets/download.svg?react'
+import '../contentScript'
 import DictoPopup from '../contentScript/DictoPopup'
+import { tl } from '../data/languages'
 import '../index.css'
 import FlashCard from './FlashCard'
 import SwipeableItem from './SwipeableItem'
-import DownloadIcon from '../assets/download.svg?react'
-import '../contentScript'
 
 export const Options = () => {
   const [history, setHistory] = useState([])
+  const [targetLanguage, setTargetLanguage] = useState('vi')
 
   useEffect(() => {
     function handleVisibilityChange() {
       if (document.visibilityState === 'visible') {
-        chrome.storage.local.get(['history'], (result) => {
+        chrome.storage.local.get(['history', 'targetLanguage'], (result) => {
           // get first 60 records
           setHistory(result.history ? result.history.slice(0, 3 * 20) : [])
+          setTargetLanguage(result.targetLanguage || 'vi')
         })
       }
     }
@@ -41,6 +44,24 @@ export const Options = () => {
     <main>
       <div className="flex items-center justify-between p-4 text-white bg-blue-500">
         <h1 className="text-xl font-bold">Translation History</h1>
+        <span className="text-sm">Total: {history.length} records</span>
+
+        <select
+          className="px-2 py-1 bg-blue-600 rounded"
+          onChange={(e) => {
+            const selectedLanguage = e.target.value
+            chrome.storage.local.set({ targetLanguage: selectedLanguage }, () => {
+              setTargetLanguage(selectedLanguage)
+            })
+          }}
+        >
+          {Object.entries(tl).map(([key, value]) => (
+            <option key={key} value={key} selected={key === targetLanguage}>
+              {value}
+            </option>
+          ))}
+        </select>
+
         <button
           className="px-4 py-2 bg-purple-600 rounded hover:bg-purple-700"
           onClick={() => {
