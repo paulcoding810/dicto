@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import SwapIcon from '../assets/arrow-right-left.svg?react'
 import DownloadIcon from '../assets/download.svg?react'
 import '../contentScript'
 import DictoPopup from '../contentScript/DictoPopup'
@@ -10,6 +11,7 @@ import SwipeableItem from './SwipeableItem'
 export const Options = () => {
   const [history, setHistory] = useState([])
   const [targetLanguage, setTargetLanguage] = useState('vi')
+  const [showInverted, setShowInverted] = useState(true)
 
   useEffect(() => {
     function handleVisibilityChange() {
@@ -65,6 +67,15 @@ export const Options = () => {
         <button
           className="px-4 py-2 bg-purple-600 rounded hover:bg-purple-700"
           onClick={() => {
+            setShowInverted((prev) => !prev)
+          }}
+        >
+          <SwapIcon title="Swap" className="w-5 h-5" />
+        </button>
+
+        <button
+          className="px-4 py-2 bg-purple-600 rounded hover:bg-purple-700"
+          onClick={() => {
             const blob = new Blob([JSON.stringify(history, null, 2)], { type: 'application/json' })
             const url = URL.createObjectURL(blob)
             const a = document.createElement('a')
@@ -82,7 +93,7 @@ export const Options = () => {
           <div className="grid grid-cols-3 gap-4">
             {history.map((item, index) => (
               <SwipeableItem key={item.timestamp} item={item} onDelete={handleDeleteItem}>
-                <FlashCard title={item.text}>
+                <FlashCard title={showInverted ? item.translation.trans?.toLowerCase() : item.text}>
                   <DictoPopup {...item.translation} showOrig expanded maxWidth="none" />
                 </FlashCard>
               </SwipeableItem>
