@@ -2,6 +2,13 @@
 
 > a chrome/firefox extension for fast translation and text-to-speech
 
+### Screenshots
+
+| Features     | Screenshot |
+| --------     | -------- |
+| Translation  | <img width="1280" height="800" alt="dicto_translation" src="https://github.com/user-attachments/assets/3ac39ddf-368e-4f6f-b453-47ea08dfb9ef" />|
+| History      | <img width="1280" height="800" alt="dicto_history" src="https://github.com/user-attachments/assets/c2cd53fa-9c94-4197-bb9c-50727e8632ca" /> |
+
 ## Developing
 
 run the command
