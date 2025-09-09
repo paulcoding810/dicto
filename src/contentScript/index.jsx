@@ -6,18 +6,22 @@ import { parseResult } from '../utils/translate'
 document.addEventListener('keydown', (event) => {
   if (event.shiftKey) {
     const selection = window.getSelection()
+    const anchorNode = selection.anchorNode
 
     if (
-      selection.anchorNode.nodeName === 'INPUT' ||
-      selection.anchorNode.nodeName === 'TEXTAREA' ||
-      selection.anchorNode.parentElement.closest('[contenteditable]') !== null
+      anchorNode.nodeName === 'INPUT' ||
+      anchorNode.nodeName === 'TEXTAREA' ||
+      Array.from(anchorNode.childNodes).some(
+        (e) => e.nodeName === 'TEXTAREA' || e.nodeName === 'INPUT',
+      ) ||
+      anchorNode.parentElement.closest('[contenteditable]') !== null
     ) {
       console.warn('Selection is in an input or textarea, skipping translation.')
       return
     }
     const position =
-      selection.anchorNode.nodeType !== Node.TEXT_NODE
-        ? selection.anchorNode.getBoundingClientRect()
+      anchorNode.nodeType !== Node.TEXT_NODE
+        ? anchorNode.getBoundingClientRect()
         : selection.getRangeAt(0).getBoundingClientRect()
 
     const selectedText = selection.toString().trim().toLowerCase()
