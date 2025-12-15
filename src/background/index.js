@@ -17,6 +17,7 @@ const requestOptions = {
   method: 'GET',
   mode: 'cors',
 }
+var lastSaved = null
 
 bindConsoleTag('[dicto]')
 
@@ -105,6 +106,12 @@ function blobToBase64(blob) {
 }
 
 function saveHistory(text, translation) {
+  if (text == lastSaved) {
+    console.warn(text + ' is already saved')
+    return
+  }
+  lastSaved = text
+
   if (!text || text.length === 0) {
     console.warn('No text provided for history saving.')
     return
