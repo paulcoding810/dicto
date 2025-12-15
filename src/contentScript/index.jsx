@@ -1,6 +1,9 @@
 import { createRoot } from 'react-dom/client'
-import DictoPopup from './DictoPopup'
+import { bindConsoleTag } from '../utils/console'
 import { parseResult } from '../utils/translate'
+import DictoPopup from './DictoPopup'
+
+bindConsoleTag('[dicto]')
 
 // on press shift, send current selected text to background script
 document.addEventListener('keydown', (event) => {

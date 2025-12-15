@@ -1,3 +1,4 @@
+import { bindConsoleTag } from '../utils/console'
 import { parseResult } from '../utils/translate'
 
 const maxLength = 5e3
@@ -16,6 +17,8 @@ const requestOptions = {
   method: 'GET',
   mode: 'cors',
 }
+
+bindConsoleTag('[dicto]')
 
 chrome.action.onClicked.addListener((tab) => {
   chrome.tabs.create({ url: chrome.runtime.getURL('options.html') })
