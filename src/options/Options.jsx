@@ -12,7 +12,7 @@ import SwipeableItem from './SwipeableItem'
 export const Options = () => {
   const [history, setHistory] = useState([])
   const [targetLanguage, setTargetLanguage] = useState('vi')
-  const [showInverted, setShowInverted] = useState(true)
+  const [showInverted, setShowInverted] = useState(false)
 
   useEffect(() => {
     bindConsoleTag('[dicto]')
