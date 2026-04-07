@@ -21,6 +21,14 @@ export default function DictoPopup({
     if (!orig || !speechSynthesis) return
     const utterance = new SpeechSynthesisUtterance(orig)
     utterance.lang = src
+    if (src.startsWith('en')) {
+      const voice = speechSynthesis
+        .getVoices()
+        .find((v) => v.voiceURI.startsWith('urn:moz-tts:osx:com.apple.voice.compact.en-US'))
+      if (voice) {
+        utterance.voice = voice
+      }
+    }
     speechSynthesis.speak(utterance)
   }
 
