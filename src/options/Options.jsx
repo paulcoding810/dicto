@@ -20,8 +20,7 @@ export const Options = () => {
     function handleVisibilityChange() {
       if (document.visibilityState === 'visible') {
         chrome.storage.local.get(['history', 'targetLanguage'], (result) => {
-          // get first 60 records
-          setHistory(result.history ? result.history.slice(0, 3 * 20) : [])
+          setHistory(result.history ?? [])
           setTargetLanguage(result.targetLanguage || 'vi')
         })
       }
