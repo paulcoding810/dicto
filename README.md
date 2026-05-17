@@ -35,33 +35,28 @@ A chrome/firefox extension for fast translation and text-to-speech
 
 ## Developing
 
-run the command
-
 ```shell
 cd dicto
-
-yarn dev
+pnpm dev
 ```
 
 ### Chrome Extension Developer Mode
 
 1. set your Chrome browser 'Developer mode' up
-2. click 'Load unpacked', and select `dicto/build` folder
+2. click 'Load unpacked', and select `dicto/build/chrome` folder
 
 ### Firefox Extension Developer Mode
 
-1. Build your project firstly by running `yarn build:firefox`
+1. Build your project firstly by running `pnpm build:firefox`
 2. Open Firefox and go to `about:debugging#/runtime/this-firefox`
-3. Click on 'Load Temporary Add-on' and select `dicto/build` folder
+3. Click on 'Load Temporary Add-on' and select `dicto/build/firefox` folder
 
 ## Packing
 
-After the development of your extension run the command
-
 ```shell
-$ yarn zip # for chrome
+pnpm zip # for chrome
 or
-$ yarn zip:firefox # for firefox
+pnpm zip:firefox # for firefox
 ```
 
 ---
