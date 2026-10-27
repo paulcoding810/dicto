@@ -16,9 +16,23 @@ function isEditable(node) {
   )
 }
 
-// on press shift, send current selected text to background script
+const doubleShiftDelay = 400
+let lastShiftTime = 0
+
+// on double shift, send current selected text to background script
 document.addEventListener('keydown', (event) => {
-  if (event.key !== 'Shift' || event.repeat) return
+  if (event.key !== 'Shift') {
+    lastShiftTime = 0
+    return
+  }
+  if (event.repeat) return
+
+  const now = Date.now()
+  if (now - lastShiftTime > doubleShiftDelay) {
+    lastShiftTime = now
+    return
+  }
+  lastShiftTime = 0
 
   const selection = window.getSelection()
   const anchorNode = selection?.anchorNode
