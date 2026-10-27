@@ -5,7 +5,6 @@ import '../contentScript'
 import DictoPopup from '../contentScript/DictoPopup'
 import { tl } from '../data/languages'
 import '../index.css'
-import { bindConsoleTag } from '../utils/console'
 import FlashCard from './FlashCard'
 import SwipeableItem from './SwipeableItem'
 
@@ -15,8 +14,6 @@ export const Options = () => {
   const [showInverted, setShowInverted] = useState(false)
 
   useEffect(() => {
-    bindConsoleTag('[dicto]')
-
     function handleVisibilityChange() {
       if (document.visibilityState === 'visible') {
         chrome.storage.local.get(['history', 'targetLanguage'], (result) => {
@@ -52,6 +49,7 @@ export const Options = () => {
 
         <select
           className="px-2 py-1 bg-blue-600 rounded"
+          value={targetLanguage}
           onChange={(e) => {
             const selectedLanguage = e.target.value
             chrome.storage.local.set({ targetLanguage: selectedLanguage }, () => {
@@ -60,7 +58,7 @@ export const Options = () => {
           }}
         >
           {Object.entries(tl).map(([key, value]) => (
-            <option key={key} value={key} selected={key === targetLanguage}>
+            <option key={key} value={key}>
               {value}
             </option>
           ))}

@@ -1,5 +1,14 @@
 import React from 'react'
 
+// Google examples only use <b> tags; render them without injecting HTML
+function renderBold(text) {
+  return text
+    .split(/(<b>.*?<\/b>)/g)
+    .map((part, i) =>
+      part.startsWith('<b>') ? <b key={i}>{part.slice(3, -4)}</b> : part.replace(/<[^>]*>/g, ''),
+    )
+}
+
 export default function DictoPopup({
   trans,
   orig,
@@ -255,11 +264,9 @@ export default function DictoPopup({
               </h4>
               <ul style={{ listStyleType: 'disc', paddingLeft: '1.2rem' }}>
                 {examples.map((ex, index) => (
-                  <li
-                    key={index}
-                    style={{ marginBottom: '0.28em' }}
-                    dangerouslySetInnerHTML={{ __html: ex }}
-                  ></li>
+                  <li key={index} style={{ marginBottom: '0.28em' }}>
+                    {renderBold(ex)}
+                  </li>
                 ))}
               </ul>
             </div>
