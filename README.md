@@ -26,6 +26,13 @@ A chrome/firefox extension for fast translation and text-to-speech
 
 ---
 
+### Usage
+
+1. Select a word or sentence on any page.
+2. Press **Shift twice** to see the translation.
+3. Hold **Ctrl / Cmd / Opt** while pressing Shift twice to translate without saving to history.
+4. Click the Dicto icon to review your history as flashcards.
+
 ### Screenshots
 
 | Features    | Screenshot                                                                                                                                      |

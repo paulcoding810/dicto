@@ -5,7 +5,10 @@ const steps = [
   ['Press Shift twice', 'A popup shows the translation, definitions and examples.'],
   ['Skip history', 'Hold Ctrl, Cmd or Opt while pressing Shift twice to translate without saving.'],
   ['Listen', 'Click 🔉 for the browser voice or 🔊 for the Google voice.'],
-  ['Review', 'Click the Dicto icon to open your history. Click a card to reveal it, hover it to delete.'],
+  [
+    'Review',
+    'Click the Dicto icon to open your history. Click a card to reveal it, hover it to delete.',
+  ],
 ]
 
 export default function Tutorial() {

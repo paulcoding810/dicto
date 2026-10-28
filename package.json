@@ -1,7 +1,7 @@
 {
   "name": "dicto",
   "displayName": "Dicto",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "author": "paulcoding",
   "description": "minimal dictionary extension",
   "type": "module",

@@ -2,8 +2,8 @@ import { bindConsoleTag } from '../utils/console'
 import { parseResult } from '../utils/translate'
 
 const maxLength = 5e3
+const maxHistory = 1000
 const requestOptions = {
-  credentials: 'include',
   headers: {
     'User-Agent': 'GoogleTranslate/dicto', // need to set a custom User-Agent to avoid being blocked
     Accept: '*/*',
@@ -17,7 +17,6 @@ const requestOptions = {
   method: 'GET',
   mode: 'cors',
 }
-var lastSaved = null
 
 bindConsoleTag('[dicto]')
 
@@ -113,13 +112,10 @@ function blobToBase64(blob) {
   })
 }
 
-function saveHistory(text, translation) {
-  if (text == lastSaved) {
-    console.warn(text + ' is already saved')
-    return
-  }
-  lastSaved = text
+// serialize writes so concurrent saves don't overwrite each other
+let saveQueue = Promise.resolve()
 
+function saveHistory(text, translation) {
   if (!text || text.length === 0) {
     console.warn('No text provided for history saving.')
     return
@@ -130,16 +126,17 @@ function saveHistory(text, translation) {
     return
   }
 
-  chrome.storage.local.get(['history'], (result) => {
-    const history = result.history || []
-
-    // Add the new item at the beginning
-    history.unshift({ text, translation, timestamp: Date.now() })
-
-    chrome.storage.local.set({ history }, () => {
-      console.log('History saved successfully:', history)
+  saveQueue = saveQueue
+    .then(async () => {
+      const { history = [] } = await chrome.storage.local.get(['history'])
+      // move a repeated word to the top instead of saving it twice
+      const updated = [
+        { text, translation, timestamp: Date.now() },
+        ...history.filter((item) => item.text !== text),
+      ].slice(0, maxHistory)
+      await chrome.storage.local.set({ history: updated })
     })
-  })
+    .catch((error) => console.error('Error saving history:', error))
 }
 
 function getBrowserName() {
