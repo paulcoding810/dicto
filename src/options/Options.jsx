@@ -7,6 +7,7 @@ import { tl } from '../data/languages'
 import '../index.css'
 import FlashCard from './FlashCard'
 import SwipeableItem from './SwipeableItem'
+import Tutorial from './Tutorial'
 
 export const Options = () => {
   const [history, setHistory] = useState([])
@@ -43,6 +44,7 @@ export const Options = () => {
 
   return (
     <main>
+      <Tutorial />
       <div className="flex items-center justify-between p-4 text-white bg-blue-500">
         <h1 className="text-xl font-bold">Translation History</h1>
         <span className="text-sm">Total: {history.length} records</span>

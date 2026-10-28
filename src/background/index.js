@@ -25,6 +25,14 @@ chrome.action.onClicked.addListener((tab) => {
   chrome.tabs.create({ url: chrome.runtime.getURL('options.html') })
 })
 
+chrome.runtime.onInstalled.addListener(async ({ reason }) => {
+  if (reason !== 'install' && reason !== 'update') return
+  const { tutorialSeen } = await chrome.storage.local.get(['tutorialSeen'])
+  if (!tutorialSeen) {
+    chrome.tabs.create({ url: chrome.runtime.getURL('options.html') })
+  }
+})
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.type) {
     case 'translate':
