@@ -9,6 +9,53 @@ function renderBold(text) {
     )
 }
 
+const cardStyle = {
+  minWidth: '16rem',
+  padding: '1rem',
+  overflow: 'auto',
+  fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif',
+  fontSize: '0.875rem',
+  background: 'linear-gradient(135deg, #f9fafb 60%, #e0f2fe 100%)',
+  border: '1px solid #cbd5e1',
+  borderRadius: '0.375rem',
+  boxShadow: '0 6px 22px 0 rgba(34,99,196,0.08), 0 1.5px 8px 0 rgba(0,0,0,0.04)',
+  color: '#334155',
+}
+
+function CloseButton({ onClose }) {
+  return (
+    <button
+      onClick={(e) => {
+        e.stopPropagation()
+        e.preventDefault()
+        onClose()
+      }}
+      style={{
+        background: 'none',
+        border: 'none',
+        cursor: 'pointer',
+        color: '#94a3b8',
+        fontSize: '1rem',
+        lineHeight: 1,
+        padding: 0,
+      }}
+      title="Close (Esc)"
+      aria-label="Close"
+    >
+      ✕
+    </button>
+  )
+}
+
+function StatusCard({ maxWidth, onClose, color, children }) {
+  return (
+    <div style={{ ...cardStyle, maxWidth, display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
+      <span style={{ flex: 1, color }}>{children}</span>
+      {onClose && <CloseButton onClose={onClose} />}
+    </div>
+  )
+}
+
 export default function DictoPopup({
   trans,
   orig,
@@ -20,6 +67,9 @@ export default function DictoPopup({
   maxWidth = '22rem',
   showOrig = false,
   expanded: initialExpanded = false,
+  loading = false,
+  error,
+  onClose,
 }) {
   const expandable = Boolean(definitions?.length > 0 || examples?.length > 0)
   const [expanded, setExpanded] = React.useState(initialExpanded)
@@ -63,22 +113,24 @@ export default function DictoPopup({
     )
   }
 
+  if (loading) {
+    return (
+      <StatusCard maxWidth={maxWidth} onClose={onClose} color="#64748b">
+        Translating…
+      </StatusCard>
+    )
+  }
+
+  if (error) {
+    return (
+      <StatusCard maxWidth={maxWidth} onClose={onClose} color="#dc2626">
+        {error}
+      </StatusCard>
+    )
+  }
+
   return (
-    <div
-      style={{
-        maxWidth,
-        minWidth: '16rem',
-        padding: '1rem',
-        overflow: 'auto',
-        fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif',
-        fontSize: '0.875rem',
-        background: 'linear-gradient(135deg, #f9fafb 60%, #e0f2fe 100%)',
-        border: '1px solid #cbd5e1',
-        borderRadius: '0.375rem',
-        boxShadow: '0 6px 22px 0 rgba(34,99,196,0.08), 0 1.5px 8px 0 rgba(0,0,0,0.04)',
-        color: '#334155',
-      }}
-    >
+    <div style={{ ...cardStyle, maxWidth }}>
       {showOrig && orig && (
         <h3
           style={{
@@ -145,6 +197,7 @@ export default function DictoPopup({
           >
             🔊
           </button>
+          {onClose && <CloseButton onClose={onClose} />}
         </div>
       </div>
       <p

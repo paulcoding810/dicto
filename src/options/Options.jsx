@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import SwapIcon from '../assets/arrow-right-left.svg?react'
 import DownloadIcon from '../assets/download.svg?react'
 import '../contentScript'
@@ -6,13 +6,14 @@ import DictoPopup from '../contentScript/DictoPopup'
 import { tl } from '../data/languages'
 import '../index.css'
 import FlashCard from './FlashCard'
-import SwipeableItem from './SwipeableItem'
 import Tutorial from './Tutorial'
 
 export const Options = () => {
   const [history, setHistory] = useState([])
   const [targetLanguage, setTargetLanguage] = useState('vi')
   const [showInverted, setShowInverted] = useState(false)
+  const [deleted, setDeleted] = useState(null)
+  const undoTimer = useRef(null)
 
   useEffect(() => {
     function handleVisibilityChange() {
@@ -32,14 +33,24 @@ export const Options = () => {
     }
   }, [])
 
-  const handleDeleteItem = (itemToDelete) => {
-    const updatedHistory = history.filter((item) => item.timestamp !== itemToDelete.timestamp)
+  const saveHistory = (updatedHistory) => {
     setHistory(updatedHistory)
+    chrome.storage.local.set({ history: updatedHistory })
+  }
 
-    // Update storage
-    chrome.storage.local.set({ history: updatedHistory }, () => {
-      console.log('History item deleted')
-    })
+  const handleDeleteItem = (itemToDelete, index) => {
+    saveHistory(history.filter((item) => item !== itemToDelete))
+    setDeleted({ item: itemToDelete, index })
+    clearTimeout(undoTimer.current)
+    undoTimer.current = setTimeout(() => setDeleted(null), 5000)
+  }
+
+  const handleUndo = () => {
+    clearTimeout(undoTimer.current)
+    const restored = [...history]
+    restored.splice(deleted.index, 0, deleted.item)
+    saveHistory(restored)
+    setDeleted(null)
   }
 
   return (
@@ -94,17 +105,35 @@ export const Options = () => {
         {history.length > 0 ? (
           <div className="grid grid-cols-3 gap-4">
             {history.map((item, index) => (
-              <SwipeableItem key={item.timestamp} item={item} onDelete={handleDeleteItem}>
+              <div key={item.timestamp} className="group relative rounded-md bg-white">
                 <FlashCard title={showInverted ? item.translation.trans?.toLowerCase() : item.text}>
                   <DictoPopup {...item.translation} showOrig expanded maxWidth="none" />
                 </FlashCard>
-              </SwipeableItem>
+                <button
+                  className="absolute right-2 top-2 rounded px-2 py-1 text-sm text-slate-400 opacity-0 hover:bg-red-50 hover:text-red-600 focus:opacity-100 group-hover:opacity-100"
+                  onClick={() => handleDeleteItem(item, index)}
+                  title="Delete"
+                  aria-label={`Delete ${item.text}`}
+                >
+                  🗑
+                </button>
+              </div>
             ))}
           </div>
         ) : (
           <p>No translation history available.</p>
         )}
       </div>
+      {deleted && (
+        <div className="fixed bottom-4 left-1/2 z-40 flex -translate-x-1/2 items-center gap-4 rounded-md bg-slate-800 px-4 py-3 text-sm text-white shadow-lg">
+          <span>
+            Deleted <strong>{deleted.item.text}</strong>
+          </span>
+          <button className="font-semibold text-blue-300 hover:text-blue-200" onClick={handleUndo}>
+            Undo
+          </button>
+        </div>
+      )}
     </main>
   )
 }

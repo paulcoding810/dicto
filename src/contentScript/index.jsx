@@ -19,8 +19,13 @@ function isEditable(node) {
 const doubleShiftDelay = 400
 let lastShiftTime = 0
 
+const popupMargin = 8
+
 // on double shift, send current selected text to background script
 document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && popups.length > 0) {
+    removeAllPopups()
+  }
   if (event.key !== 'Shift') {
     lastShiftTime = 0
     return
@@ -49,26 +54,34 @@ document.addEventListener('keydown', (event) => {
     return
   }
 
-  const position =
+  const anchorRect =
     anchorNode.nodeType !== Node.TEXT_NODE
       ? anchorNode.getBoundingClientRect()
       : selection.getRangeAt(0).getBoundingClientRect()
 
-  chrome.runtime.sendMessage(
-    {
-      type: 'translate',
-      text: selectedText,
-      shouldSave: !event.ctrlKey && !event.metaKey && !event.altKey, // Save unless Ctrl/Cmd/Opt is pressed
-    },
-    (response) => {
-      if (response && response.success) {
-        console.log('Translation request sent successfully:', response.result)
-        showTranslationResult(response.result, position)
-      } else {
-        console.error('Failed to send translation request:', response)
-      }
-    },
-  )
+  const popup = showPopup(anchorRect)
+  popup.render({ loading: true })
+
+  try {
+    chrome.runtime.sendMessage(
+      {
+        type: 'translate',
+        text: selectedText,
+        shouldSave: !event.ctrlKey && !event.metaKey && !event.altKey, // Save unless Ctrl/Cmd/Opt is pressed
+      },
+      (response) => {
+        if (response && response.success) {
+          popup.render(parseResult(response.result))
+        } else {
+          console.error('Failed to send translation request:', response)
+          popup.render({ error: "Couldn't translate. Please try again." })
+        }
+      },
+    )
+  } catch (error) {
+    console.error('Failed to send translation request:', error)
+    popup.render({ error: 'Dicto was updated. Reload this page to keep translating.' })
+  }
 })
 
 // add click event to hide all popups when clicking outside
@@ -79,21 +92,34 @@ document.addEventListener('click', (event) => {
 })
 
 function removeAllPopups() {
-  popups.splice(0).forEach(({ element, root }) => {
+  popups.splice(0).forEach(({ element, root, observer }) => {
+    observer.disconnect()
     root.unmount()
     element.remove()
   })
 }
 
-function showTranslationResult(result, position) {
+// keep the popup inside the viewport, flipping above the selection when there is no room below
+function placePopup(element, anchorRect) {
+  const { width, height } = element.getBoundingClientRect()
+  const maxLeft = window.innerWidth - width - popupMargin
+  const left = Math.max(popupMargin, Math.min(anchorRect.left, maxLeft))
+
+  const below = anchorRect.bottom + popupMargin
+  const above = anchorRect.top - height - popupMargin
+  const top = below + height > window.innerHeight && above >= 0 ? above : below
+
+  element.style.left = `${left + window.scrollX}px`
+  element.style.top = `${top + window.scrollY}px`
+}
+
+function showPopup(anchorRect) {
   removeAllPopups()
 
   const rootElement = document.createElement('div')
   rootElement.className = 'dicto-container'
   Object.assign(rootElement.style, {
     maxWidth: '20rem',
-    top: `${position.top + position.height + window.scrollY}px`,
-    left: `${position.left + window.scrollX}px`,
     zIndex: '9999',
     position: 'absolute',
   })
@@ -105,6 +131,18 @@ function showTranslationResult(result, position) {
   shadowRoot.appendChild(shadowContainer)
 
   const root = createRoot(shadowContainer)
-  popups.push({ element: rootElement, root })
-  root.render(<DictoPopup {...parseResult(result)} />)
+  const observer = new ResizeObserver(() => placePopup(rootElement, anchorRect))
+  observer.observe(rootElement)
+
+  const popup = { element: rootElement, root, observer }
+  popups.push(popup)
+  placePopup(rootElement, anchorRect)
+
+  return {
+    render(props) {
+      // ignore late responses for a popup that was already closed
+      if (!popups.includes(popup)) return
+      root.render(<DictoPopup {...props} onClose={removeAllPopups} />)
+    },
+  }
 }
